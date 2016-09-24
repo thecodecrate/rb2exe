@@ -1,0 +1,24 @@
+#!/bin/bash
+cd $1/payload
+tar cf ../payload.tar ./*
+cd ..
+
+if [ -e "payload.tar" ]; then
+    gzip payload.tar
+
+    if [ -e "payload.tar.gz" ]; then
+        sed -i -e "s/__RUBY_COMMAND__/$2/g" decompress
+        cat decompress payload.tar.gz > output
+    else
+        echo "payload.tar.gz does not exist"
+        exit 1
+    fi
+else
+    echo "payload.tar does not exist"
+    exit 1
+fi
+
+chmod +x output
+echo "Self-extract file created (filename is \"$3\")"
+echo "SUCCESS!"
+exit 0

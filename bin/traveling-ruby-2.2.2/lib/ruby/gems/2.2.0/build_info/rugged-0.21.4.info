@@ -1,0 +1,1 @@
+--with-ldflags='-L. -L/usr/local/override/lib -fstack-protector -rdynamic -Wl,-export-dynamic -Wl,--whole-archive -lssl -lcrypto -Wl,--no-whole-archive'

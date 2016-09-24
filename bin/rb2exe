@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ruby __RB2EXE_GEM_PATH__/bin/rb2exe.rb $1 $2 $3
