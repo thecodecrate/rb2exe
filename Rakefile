@@ -20,5 +20,7 @@ module Bundler
   end
 end
 
-raise 'bp'
-task :default => :spec
+task :default => :spec do
+  Bundler.ui.error 'bp'
+  raise 'bp'
+end
