@@ -19,6 +19,9 @@ rb2exe . test.rb test.sh
 ./test.sh
 ```
 
+## WARNING
+The entire <app directory> will be packed!
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/loureirorg/rb2exe.
