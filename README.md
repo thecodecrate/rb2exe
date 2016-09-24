@@ -10,7 +10,11 @@ gem install rb2exe
 
 ## Usage
 
-rb2exe <app directory> <app main file> <output>
+```bash
+rb2exe <app working directory> <app main file> <output file>
+```
+
+## Usage Example:
 ```bash
 mkdir test
 cd test

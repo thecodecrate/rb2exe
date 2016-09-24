@@ -6,7 +6,7 @@ module Bundler
       path = File.expand_path(File.dirname(__FILE__))
       path = path.gsub('/', '\/').strip
       `sed -i -e "s/__RB2EXE_GEM_PATH__/#{path}/g" #{Dir.pwd}/bin/rb2exe`
-      `sudo ln -sf #{Dir.pwd}/bin/rb2exe /usr/local/bin/`
+      sh_with_code("sudo ln -sf #{Dir.pwd}/bin/rb2exe /usr/local/bin/")
 
       built_gem_path ||= build_gem
       out, _ = sh_with_code("gem install '#{built_gem_path}'#{" --local" if local}")
