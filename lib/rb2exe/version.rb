@@ -1,3 +1,3 @@
 module Rb2exe
-  VERSION = "0.1.25"
+  VERSION = "0.1.46"
 end
