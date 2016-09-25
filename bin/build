@@ -1,8 +1,12 @@
 #!/bin/bash
 cd $1/payload
+
+if ! $4; then
 echo "Adding files:"
 ls lib/app -1A
 echo ""
+fi
+
 tar cf ../payload.tar ./*
 cd ..
 
@@ -22,6 +26,5 @@ else
 fi
 
 chmod +x output
-echo "Self-extract file created (filename is \"$3\")"
-echo "SUCCESS!"
+echo "SUCCESS! (filename is \"$3\")"
 exit 0

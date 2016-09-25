@@ -11,23 +11,31 @@ gem install rb2exe
 ## Usage
 
 ```bash
-rb2exe script.rb <optional folder to include> <optional output filename>
+rb2exe RUBY_SCRIPT [options]
+    -q, --quiet                      Do not run verbosely
+    -a, --add FOLDER                 Add an entire folder (eg. ".")
+    -o, --output OUTPUT              Output executable filename
+    -h, --help                       Help
 ```
 
-## Usage Example:
+## Example:
 ```bash
 mkdir test
 cd test
 echo "puts 'Hello world'" > test.rb
+
 rb2exe test.rb
 ./test
 ```
+
 
 ## Security
 
 rb2exe DOESN'T protects your source code.
 
-In fact, the produced executable file contains all your source files and THEY CAN BE EASILY EXTRACTED.
+In fact, the produced executable file contains all the source files and THEY CAN BE EASILY EXTRACTED.
+
+You can see the list of the added source files when you run rb2exe.
 
 rb2exe just packages your source files (plus a stand-alone ruby) in an auto-extract zip file. It doesn't protects your code in any way.
 
