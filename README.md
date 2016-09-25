@@ -11,7 +11,8 @@ gem install rb2exe
 ## Usage
 
 ```bash
-rb2exe <app working directory> <app main file> <output file>
+rb2exe APP_WORKING_DIRECTORY APP_MAIN_FILE OUTPUT_FILE
+rb2exe . test.rb test.sh
 ```
 
 ## Usage Example:
@@ -22,9 +23,6 @@ echo "puts 'Hello world'" > test.rb
 rb2exe . test.rb test.sh
 ./test.sh
 ```
-
-## WARNING
-The entire <app directory> will be packed!
 
 ## Contributing
 

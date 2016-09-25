@@ -1,5 +1,7 @@
 #!/bin/bash
 cd $1/payload
+echo "Adding files..."
+ls lib/app -1A
 tar cf ../payload.tar ./*
 cd ..
 
