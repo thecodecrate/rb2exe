@@ -11,8 +11,7 @@ gem install rb2exe
 ## Usage
 
 ```bash
-rb2exe APP_WORKING_DIRECTORY APP_MAIN_FILE OUTPUT_FILE
-rb2exe . test.rb test.sh
+rb2exe script.rb <optional folder to include> <optional output filename>
 ```
 
 ## Usage Example:
@@ -20,9 +19,17 @@ rb2exe . test.rb test.sh
 mkdir test
 cd test
 echo "puts 'Hello world'" > test.rb
-rb2exe . test.rb test.sh
-./test.sh
+rb2exe test.rb
+./test
 ```
+
+## Security
+
+rb2exe DOESN'T protects your source code.
+
+In fact, the produced executable file contains all your source files and THEY CAN BE EASILY EXTRACTED.
+
+rb2exe just packages your source files (plus a stand-alone ruby) in an auto-extract zip file. It doesn't protects your code in any way.
 
 ## Contributing
 
@@ -31,4 +38,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/lourei
 ## TODO
 
 * Allow ruby versions other than 2.2.2;
-* Pack web applications;
+* Rails support;
+* Gemfile support;
+* Windows / OSX executable output;
+* Testing suite;

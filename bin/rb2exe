@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby
 
 # Usage:
-#  rb2exe <app directory> <app main file> <output>
-#  Eg: rb2exe . test.rb test.sh
+#  rb2exe <app main file> <optional app directory> <optional output filename>
+#  Eg: rb2exe test.rb . exe_output
 #
-#  WARNING: the entire <app directory> will be packed
 require "tmpdir"
 
 def blank?(arg)
@@ -14,24 +13,25 @@ end
 # Gem path
 gem_dir = File.expand_path(File.dirname(__FILE__) + "/..")
 
+# Main ruby app (filename)
+main_app_path = ARGV[0]
+abort("You need to specify a ruby file.") if blank?(main_app_path)
+abort("#{ARGV[0]} doesn't exist.") if ! File.exists?(ARGV[0])
+
 # App directory
 pwd = Dir.pwd
-app_dir = blank?(ARGV[0]) ? pwd : "#{pwd}/#{ARGV[0]}"
-app_dir = File.expand_path(app_dir)
-if ! Dir.exists?(app_dir)
-  abort "Directory #{app_dir} doesn't exist."
+if blank?(ARGV[1])
+  app_dir = nil
 else
-  puts "Converting: #{app_dir}"
-end
-
-# Main ruby app (filename)
-main_app_path = ARGV[1]
-if blank?(main_app_path)
-  abort("You need to specify a ruby file.")
+  app_dir = File.expand_path(ARGV[1])
+  abort "Directory #{app_dir} doesn't exist." if ! Dir.exists?(app_dir)
 end
 
 # Executable filename
-exe_fn = blank?(ARGV[2]) ? "output" : ARGV[2]
+#   If not specified, uses the main app filename without its extension. Eg.:
+#     script.rb -> script
+exe_fn = blank?(ARGV[2]) ? File.basename(ARGV[0], File.extname(ARGV[0])) : ARGV[2]
+abort("Can't use '#{exe_fn}' as a filename (there's a folder with this name).") if Dir.exists?("#{pwd}/#{exe_fn}")
 
 # Ruby version should be 2.2.2, 64 bits:
 version = `echo $RUBY_VERSION`.strip
@@ -44,11 +44,17 @@ result = "Error"
 Dir.mktmpdir do |tmp_dir|
   FileUtils.mkdir_p("#{tmp_dir}/payload/lib")
   FileUtils.cp_r("#{gem_dir}/bin/traveling-ruby-2.2.2", "#{tmp_dir}/payload/lib/ruby") # Copy ruby traveler 2.2.2 on "payload/lib/ruby"
-  FileUtils.cp_r(app_dir, "#{tmp_dir}/payload/lib/app") # Move the "app" folder to "payload/lib"
+  # Move the "app" folder to "payload/lib"
+  if app_dir.nil?
+    FileUtils.mkdir_p("#{tmp_dir}/payload/lib/app/")
+    FileUtils.cp_r(main_app_path, "#{tmp_dir}/payload/lib/app/")
+  else
+    FileUtils.cp_r(app_dir, "#{tmp_dir}/payload/lib/app")
+  end
   FileUtils.cp_r("#{gem_dir}/bin/installer", "#{tmp_dir}/payload/") # Create a wrapper script (name it as "installer")
   FileUtils.cp_r("#{gem_dir}/bin/build", "#{tmp_dir}/") # Package builder
   FileUtils.cp_r("#{gem_dir}/bin/decompress", "#{tmp_dir}/")
   result = `#{tmp_dir}/build #{tmp_dir} #{main_app_path} #{exe_fn}`
-  FileUtils.mv("#{tmp_dir}/output", app_dir) # Output
+  FileUtils.mv("#{tmp_dir}/output", "#{pwd}/#{exe_fn}") # Output
 end
 print result
