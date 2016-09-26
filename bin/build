@@ -1,10 +1,11 @@
 #!/bin/bash
+
 cd $1/payload
 
 if ! $4; then
-echo "Adding files:"
-ls lib/app -1A
-echo ""
+  echo "Adding files:"
+  ls lib/app -1A
+  echo ""
 fi
 
 tar cf ../payload.tar ./*
@@ -15,6 +16,7 @@ if [ -e "payload.tar" ]; then
 
     if [ -e "payload.tar.gz" ]; then
         sed -i -e "s/__RUBY_COMMAND__/$2/g" decompress
+        sed -i -e "s/__IS_RAILS__/$5/g" decompress
         cat decompress payload.tar.gz > output
     else
         echo "payload.tar.gz does not exist"

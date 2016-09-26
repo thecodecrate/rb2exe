@@ -16,7 +16,8 @@ end
 options = {
   quiet: false,
   add: nil,
-  output: nil
+  output: nil,
+  rails: false
 }
 opt_parser = OptionParser.new do |opts|
   opts.banner = "Usage: rb2exe RUBY_SCRIPT [options]"
@@ -25,6 +26,7 @@ opt_parser = OptionParser.new do |opts|
   opts.on("-q", "--quiet", "Do not run verbosely") { |v| options[:quiet] = v }
   opts.on("-a", "--add FOLDER", "Add an entire folder (eg. \".\")") { |v| options[:add] = v }
   opts.on("-o", "--output OUTPUT", "Output executable filename") { |v| options[:output] = v }
+  opts.on("-r", "--rails", "Rails support") { |v| options[:rails] = v }
   opts.on("-h","--help", "Help") { puts opt_parser }
 end
 opt_parser.parse!
@@ -34,23 +36,31 @@ gem_dir = File.expand_path(File.dirname(__FILE__) + "/..")
 
 # Main ruby app (filename)
 main_app_path = ARGV[0]
-abort("#{opt_parser}") if blank?(main_app_path)
-abort("#{ARGV[0]} doesn't exist.") if ! File.exists?(ARGV[0])
+abort("#{opt_parser}") if ! options[:rails] && blank?(main_app_path)
+abort("#{ARGV[0]} doesn't exist.") if ! options[:rails] && ! File.exists?(ARGV[0])
 
 # App directory
 pwd = Dir.pwd
-if blank?(options[:add])
-  app_dir = nil
+if options[:rails]
+  app_dir = File.expand_path('.')
 else
-  app_dir = File.expand_path(options[:add])
-  abort "Directory #{app_dir} doesn't exist." if ! Dir.exists?(app_dir)
+  if blank?(options[:add])
+    app_dir = nil
+  else
+    app_dir = File.expand_path(options[:add])
+    abort "Directory #{app_dir} doesn't exist." if ! Dir.exists?(app_dir)
+  end
 end
 
 # Executable filename
 #   If not specified, uses the main app filename without its extension. Eg.:
 #     script.rb -> script
-exe_fn = blank?(options[:output]) ? File.basename(ARGV[0], File.extname(ARGV[0])) : options[:output]
-abort("Can't use '#{exe_fn}' as a filename (there's a folder with this name).") if Dir.exists?("#{pwd}/#{exe_fn}")
+if blank?(options[:output]) && options[:rails]
+  exe_fn = "output"
+else
+  exe_fn = blank?(options[:output]) ? File.basename(ARGV[0], File.extname(ARGV[0])) : options[:output]
+  abort("Can't use '#{exe_fn}' as a filename (there's a folder with this name).") if Dir.exists?("#{pwd}/#{exe_fn}")
+end
 
 # Ruby version should be 2.2.2, 64 bits:
 version = `echo $RUBY_VERSION`.strip
@@ -98,7 +108,7 @@ Dir.mktmpdir do |tmp_dir|
 
   FileUtils.cp_r("#{gem_dir}/bin/build", "#{tmp_dir}/") # Package builder
   FileUtils.cp_r("#{gem_dir}/bin/decompress", "#{tmp_dir}/")
-  result = `#{tmp_dir}/build #{tmp_dir} #{main_app_path} #{exe_fn} #{options[:quiet]}`
+  result = `#{tmp_dir}/build #{tmp_dir} #{main_app_path} #{exe_fn} #{options[:quiet]} #{options[:rails]}`
   FileUtils.mv("#{tmp_dir}/output", "#{pwd}/#{exe_fn}") # Output
 end
 print result

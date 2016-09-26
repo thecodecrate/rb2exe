@@ -14,7 +14,12 @@ then
   unset BUNDLE_IGNORE_CONFIG
 
   # Run the actual app using the bundled Ruby interpreter, with Bundler activated.
-  exec "$SELFDIR/lib/ruby/bin/ruby" -rbundler/setup "$1"
+  if $2; then
+    export RAILS_ENV=production
+    exec "$SELFDIR/lib/ruby/bin/ruby" -rbundler/setup "bin/rails" server
+  else
+    exec "$SELFDIR/lib/ruby/bin/ruby" -rbundler/setup "$1"
+  fi
 else
   exec "$SELFDIR/lib/ruby/bin/ruby" "$1"
 fi

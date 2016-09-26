@@ -7,7 +7,7 @@ tail -n+$ARCHIVE $0 | tar -xz -C $TMPDIR
 
 CDIR=`pwd`
 cd $TMPDIR
-./installer __RUBY_COMMAND__
+./installer __RUBY_COMMAND__ __IS_RAILS__
 
 cd $CDIR
 rm -rf $TMPDIR

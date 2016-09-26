@@ -16,7 +16,7 @@ for DIR in "$ROOT"/lib/ruby/gems/*/deplibs/*/*; do
 done
 echo GEM_HOME="$ROOT/lib/ruby/gems/2.2.0"
 echo GEM_PATH="$ROOT/lib/ruby/gems/2.2.0"
-echo RUBYLIB=\"$ROOT/lib/ruby/site_ruby/2.2.0:$ROOT/lib/ruby/site_ruby/2.2.0/i686-linux:$ROOT/lib/ruby/site_ruby:$ROOT/lib/ruby/vendor_ruby/2.2.0:$ROOT/lib/ruby/vendor_ruby/2.2.0/i686-linux:$ROOT/lib/ruby/vendor_ruby:$ROOT/lib/ruby/2.2.0:$ROOT/lib/ruby/2.2.0/i686-linux\"
+echo RUBYLIB=\"$ROOT/lib/ruby/site_ruby/2.2.0:$ROOT/lib/ruby/site_ruby/2.2.0/x86_64-linux:$ROOT/lib/ruby/site_ruby:$ROOT/lib/ruby/vendor_ruby/2.2.0:$ROOT/lib/ruby/vendor_ruby/2.2.0/x86_64-linux:$ROOT/lib/ruby/vendor_ruby:$ROOT/lib/ruby/2.2.0:$ROOT/lib/ruby/2.2.0/x86_64-linux\"
 
 echo export ORIG_LD_LIBRARY_PATH
 echo export ORIG_SSL_CERT_DIR

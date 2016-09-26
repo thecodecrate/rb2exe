@@ -52,6 +52,24 @@ rb2exe a.rb --add .
 ./a
 ```
 
+## Example IV - Rails support
+```bash
+rails new myproject
+cd myproject
+
+rb2exe --rails
+./output
+# => Booting Puma
+# => Rails 5.0.0.1 application starting in production on http://0.0.0.0:3000
+# => Run `rails server -h` for more startup options
+# Puma starting in single mode...
+# * Version 3.6.0 (ruby 2.2.2-p95), codename: Sleepy Sunday Serenity
+# * Min threads: 5, max threads: 5
+# * Environment: production
+# * Listening on tcp://0.0.0.0:3000
+# Use Ctrl-C to stop
+```
+
 
 ## Security
 
@@ -71,9 +89,8 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/lourei
 
 ## TODO
 
-* Allow ruby versions other than 2.2.2;
-* Rails support;
 * Windows / OSX executable output;
+* Allow ruby versions other than 2.2.2;
 * Testing suite;
 
 If you need the above features, please take a look on my article, where I explain how to achieve them manually:
