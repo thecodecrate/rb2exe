@@ -15,6 +15,7 @@ rb2exe RUBY_SCRIPT [options]
     -q, --quiet                      Do not run verbosely
     -a, --add FOLDER                 Add an entire folder (eg. ".")
     -o, --output OUTPUT              Output executable filename
+    -r, --rails                      Rails support
     -h, --help                       Help
 ```
 
@@ -24,6 +25,7 @@ echo "puts 'Hello world'" > test.rb
 
 rb2exe test.rb
 ./test
+# Hello world
 ```
 
 
@@ -37,6 +39,7 @@ echo "puts STR" >> main.rb
 
 rb2exe main.rb --add .
 ./main
+# Hello world
 ```
 
 ## Example III - Gemfile support
@@ -50,6 +53,7 @@ echo 'puts "Hello #{Faker::Name.name}"' >> a.rb
 
 rb2exe a.rb --add .
 ./a
+# Hello Abbigail Okuneva
 ```
 
 ## Example IV - Rails support
