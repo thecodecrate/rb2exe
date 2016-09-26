@@ -18,7 +18,7 @@ rb2exe RUBY_SCRIPT [options]
     -h, --help                       Help
 ```
 
-## Example:
+## Example
 ```bash
 echo "puts 'Hello world'" > test.rb
 
@@ -37,9 +37,6 @@ You can see the list of the added source files when you run rb2exe.
 
 rb2exe just packages your source files (plus a stand-alone ruby) in an auto-extract zip file. It doesn't protects your code in any way.
 
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/loureirorg/rb2exe.
 
 ## TODO
 
@@ -48,3 +45,10 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/lourei
 * Gemfile support;
 * Windows / OSX executable output;
 * Testing suite;
+
+If you need the above features, please take a look on my article, where I explain how to achieve them manually:
+http://www.learnwithdaniel.com/2016/08/ruby-to-portable-exe-app/
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/loureirorg/rb2exe.
