@@ -3,6 +3,7 @@
 # Usage:
 #  rb2exe script.rb [OPTIONS]
 #
+require_relative "../lib/rb2exe/version.rb"
 require "tmpdir"
 require 'optparse'
 
