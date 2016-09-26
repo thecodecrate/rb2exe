@@ -4,6 +4,7 @@ set -e
 # Figure out where this script is located.
 SELFDIR="`dirname \"$0\"`"
 SELFDIR="`cd \"$SELFDIR\" && pwd`"
+cd $SELFDIR/lib/app/
 
 ## GEMFILE
 if [ -f "$SELFDIR/lib/vendor/Gemfile" ]
@@ -13,7 +14,7 @@ then
   unset BUNDLE_IGNORE_CONFIG
 
   # Run the actual app using the bundled Ruby interpreter, with Bundler activated.
-  exec "$SELFDIR/lib/ruby/bin/ruby" -rbundler/setup "$SELFDIR/lib/app/$1"
+  exec "$SELFDIR/lib/ruby/bin/ruby" -rbundler/setup "$1"
 else
-  exec "$SELFDIR/lib/ruby/bin/ruby" "$SELFDIR/lib/app/$1"
+  exec "$SELFDIR/lib/ruby/bin/ruby" "$1"
 fi

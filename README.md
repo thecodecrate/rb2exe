@@ -27,6 +27,19 @@ rb2exe test.rb
 ```
 
 
+## Example II - Multi source project
+```bash
+mkdir test
+cd test
+echo "STR = 'Hello world'" > a.rb
+echo "load 'a.rb'" > main.rb
+echo "puts STR" >> main.rb
+
+rb2exe main.rb --add .
+./main
+```
+
+
 ## Security
 
 rb2exe DOESN'T protects your source code.
@@ -36,6 +49,11 @@ In fact, the produced executable file contains all the source files and THEY CAN
 You can see the list of the added source files when you run rb2exe.
 
 rb2exe just packages your source files (plus a stand-alone ruby) in an auto-extract zip file. It doesn't protects your code in any way.
+
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/loureirorg/rb2exe.
 
 
 ## TODO
@@ -48,7 +66,3 @@ rb2exe just packages your source files (plus a stand-alone ruby) in an auto-extr
 
 If you need the above features, please take a look on my article, where I explain how to achieve them manually:
 http://www.learnwithdaniel.com/2016/08/ruby-to-portable-exe-app/
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/loureirorg/rb2exe.
