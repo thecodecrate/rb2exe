@@ -20,8 +20,6 @@ rb2exe RUBY_SCRIPT [options]
 
 ## Example:
 ```bash
-mkdir test
-cd test
 echo "puts 'Hello world'" > test.rb
 
 rb2exe test.rb

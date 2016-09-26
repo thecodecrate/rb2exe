@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 
 # Usage:
-#  rb2exe <app main file> <optional app directory> <optional output filename>
-#  Eg: rb2exe test.rb . exe_output
+#  rb2exe script.rb [OPTIONS]
 #
 require "tmpdir"
 require 'optparse'
