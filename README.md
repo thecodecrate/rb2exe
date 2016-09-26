@@ -13,9 +13,10 @@ gem install rb2exe
 ```bash
 rb2exe RUBY_SCRIPT [options]
     -q, --quiet                      Do not run verbosely
-    -a, --add FOLDER                 Add an entire folder (eg. ".")
-    -o, --output OUTPUT              Output executable filename
+    -a, --add=FOLDER                 Add an entire folder (eg. "--add=.")
+    -o, --output=OUTPUT              Output executable filename
     -r, --rails                      Rails support
+    -t, --target=[osx|l32|l64|win]   Target platform (binary)
     -h, --help                       Help
 ```
 
@@ -37,7 +38,7 @@ echo "STR = 'Hello world'" > a.rb
 echo "load 'a.rb'" > main.rb
 echo "puts STR" >> main.rb
 
-rb2exe main.rb --add .
+rb2exe main.rb --add=.
 ./main
 # Hello world
 ```
@@ -51,7 +52,7 @@ echo "gem 'faker'" >> Gemfile
 echo "require 'faker'" > a.rb
 echo 'puts "Hello #{Faker::Name.name}"' >> a.rb
 
-rb2exe a.rb --add .
+rb2exe a.rb --add=.
 ./a
 # Hello Abbigail Okuneva
 ```
@@ -74,6 +75,11 @@ rb2exe --rails
 # Use Ctrl-C to stop
 ```
 
+## Example V - OSX binary
+```bash
+rb2exe test.rb --target=osx
+```
+
 
 ## Security
 
@@ -93,9 +99,9 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/lourei
 
 ## TODO
 
-* Windows / OSX executable output;
+* Windows executable output;
 * Allow ruby versions other than 2.2.2;
 * Testing suite;
 
-If you need the above features, please take a look on my article, where I explain how to achieve them manually:
+You can also take a look on my article, where I explain how this gem works, step-by-step:
 http://www.learnwithdaniel.com/2016/08/ruby-to-portable-exe-app/

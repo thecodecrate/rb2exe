@@ -17,16 +17,18 @@ options = {
   quiet: false,
   add: nil,
   output: nil,
-  rails: false
+  rails: false,
+  target: 'l64'
 }
 opt_parser = OptionParser.new do |opts|
   opts.banner = "Usage: rb2exe RUBY_SCRIPT [options]"
   opts.version = Rb2exe::VERSION
 
   opts.on("-q", "--quiet", "Do not run verbosely") { |v| options[:quiet] = v }
-  opts.on("-a", "--add FOLDER", "Add an entire folder (eg. \".\")") { |v| options[:add] = v }
-  opts.on("-o", "--output OUTPUT", "Output executable filename") { |v| options[:output] = v }
+  opts.on("-a", "--add=FOLDER", "Add an entire folder (eg. \".\")") { |v| options[:add] = v }
+  opts.on("-o", "--output=OUTPUT", "Output executable filename") { |v| options[:output] = v }
   opts.on("-r", "--rails", "Rails support") { |v| options[:rails] = v }
+  opts.on("-t", "--target=[osx|l32|l64|win]", "Target platform (binary)") { |v| options[:target] = v }
   opts.on("-h","--help", "Help") { puts opt_parser }
 end
 opt_parser.parse!
@@ -74,7 +76,14 @@ Dir.mktmpdir do |tmp_dir|
   FileUtils.mkdir_p("#{tmp_dir}/payload/lib")
 
   # Copy ruby traveler 2.2.2 to "payload/lib/ruby"
-  FileUtils.cp_r("#{gem_dir}/bin/traveling-ruby-2.2.2", "#{tmp_dir}/payload/lib/ruby")
+  ruby_src = case options[:target]
+  when "l64" then "#{gem_dir}/bin/traveling-ruby-2.2.2/l64"
+  when "l32" then "#{gem_dir}/bin/traveling-ruby-2.2.2/l32"
+  when "osx" then "#{gem_dir}/bin/traveling-ruby-2.2.2/osx"
+  when "win" then "#{gem_dir}/bin/traveling-ruby-2.2.2/win"
+  else abort("Unknow platform (#{options[:target]})")
+  end
+  FileUtils.cp_r(ruby_src, "#{tmp_dir}/payload/lib/ruby")
 
   # Move the "app" folder to "payload/lib"
   if app_dir.nil?
