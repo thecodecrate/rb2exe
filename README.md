@@ -73,7 +73,6 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/lourei
 
 * Allow ruby versions other than 2.2.2;
 * Rails support;
-* Gemfile support;
 * Windows / OSX executable output;
 * Testing suite;
 
