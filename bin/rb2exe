@@ -62,7 +62,10 @@ end
 result = "Error"
 Dir.mktmpdir do |tmp_dir|
   FileUtils.mkdir_p("#{tmp_dir}/payload/lib")
-  FileUtils.cp_r("#{gem_dir}/bin/traveling-ruby-2.2.2", "#{tmp_dir}/payload/lib/ruby") # Copy ruby traveler 2.2.2 on "payload/lib/ruby"
+
+  # Copy ruby traveler 2.2.2 to "payload/lib/ruby"
+  FileUtils.cp_r("#{gem_dir}/bin/traveling-ruby-2.2.2", "#{tmp_dir}/payload/lib/ruby")
+
   # Move the "app" folder to "payload/lib"
   if app_dir.nil?
     FileUtils.mkdir_p("#{tmp_dir}/payload/lib/app/")
@@ -71,6 +74,28 @@ Dir.mktmpdir do |tmp_dir|
     FileUtils.cp_r(app_dir, "#{tmp_dir}/payload/lib/app")
   end
   FileUtils.cp_r("#{gem_dir}/bin/installer", "#{tmp_dir}/payload/") # Create a wrapper script (name it as "installer")
+
+  # Gemfile support
+  if File.exists?("#{tmp_dir}/payload/lib/app/Gemfile")
+    puts "Gemfile detected. Loading gems." unless options[:quiet]
+    FileUtils.mkdir_p("#{tmp_dir}/payload/lib/tmp") # Create a "tmp" folder on ".package/payload/lib"
+    FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile", "#{tmp_dir}/payload/lib/tmp/") # Copy the project Gemfile to tmp
+    FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile.lock", "#{tmp_dir}/payload/lib/tmp/") if File.exists?("#{tmp_dir}/payload/lib/app/Gemfile.lock")
+    # Download gems into the "lib/vendor" folder
+    Bundler.with_clean_env do
+      Dir.chdir("#{tmp_dir}/payload/lib/app") do
+        `bundle install --path #{tmp_dir}/payload/lib/vendor --without development`
+      end
+    end
+    FileUtils.rm_rf("#{tmp_dir}/payload/lib/tmp/") # Delete tmp folder
+    %x[cd #{tmp_dir}/payload/lib/ && rm -f vendor/*/*/cache/*] # Delete gem's cache in the vendor folder
+    FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile", "#{tmp_dir}/payload/lib/vendor/") # Copy the Gemfile to the vendor folder
+    FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile.lock", "#{tmp_dir}/payload/lib/vendor/") if File.exists?("#{tmp_dir}/payload/lib/app/Gemfile.lock")
+    # Create a bundler config
+    FileUtils.mkdir_p("#{tmp_dir}/payload/lib/vendor/.bundle")
+    FileUtils.cp("#{gem_dir}/lib/bundler-config", "#{tmp_dir}/payload/lib/vendor/.bundle/config")
+  end
+
   FileUtils.cp_r("#{gem_dir}/bin/build", "#{tmp_dir}/") # Package builder
   FileUtils.cp_r("#{gem_dir}/bin/decompress", "#{tmp_dir}/")
   result = `#{tmp_dir}/build #{tmp_dir} #{main_app_path} #{exe_fn} #{options[:quiet]}`

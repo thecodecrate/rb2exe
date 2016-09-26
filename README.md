@@ -39,6 +39,19 @@ rb2exe main.rb --add .
 ./main
 ```
 
+## Example III - Gemfile support
+```bash
+mkdir test
+cd test
+echo "source 'https://rubygems.org'" > Gemfile
+echo "gem 'faker'" >> Gemfile
+echo "require 'faker'" > a.rb
+echo 'puts "Hello #{Faker::Name.name}"' >> a.rb
+
+rb2exe a.rb --add .
+./a
+```
+
 
 ## Security
 
