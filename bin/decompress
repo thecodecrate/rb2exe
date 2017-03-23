@@ -1,5 +1,6 @@
 #!/bin/bash
 export TMPDIR=`mktemp -d /tmp/selfextract.XXXXXX`
+export ARGV=$@
 
 ARCHIVE=`awk '/^__ARCHIVE_BELOW__/ {print NR + 1; exit 0; }' $0`
 
