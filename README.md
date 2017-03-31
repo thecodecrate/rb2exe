@@ -97,6 +97,9 @@ rb2exe just packages your source files (plus a stand-alone ruby) in an auto-extr
 Bug reports and pull requests are welcome on GitHub at https://github.com/loureirorg/rb2exe.
 
 
+# Changelog
+* 0.2.0: adding support to handle ARGV being passed to the ruby script (thanks @dabooze)
+
 ## TODO
 
 * Windows executable output;
