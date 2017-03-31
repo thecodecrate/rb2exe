@@ -18,7 +18,7 @@ then
     export RAILS_ENV=production
     exec "$SELFDIR/lib/ruby/bin/ruby" -rbundler/setup "bin/rails" server
   else
-    exec "$SELFDIR/lib/ruby/bin/ruby" -rbundler/setup "$1"
+    exec "$SELFDIR/lib/ruby/bin/ruby" -rbundler/setup "$1" $ARGV
   fi
 else
   exec "$SELFDIR/lib/ruby/bin/ruby" "$1"
