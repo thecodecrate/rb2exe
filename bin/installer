@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+#####
+# $1: $CDIR
+# $2: $TMPDIR
+# $3: __RUBY_COMMAND__
+# $4: __IS_RAILS__
+#####
+
 # Figure out where this script is located.
 SELFDIR="`dirname \"$0\"`"
 SELFDIR="`cd \"$SELFDIR\" && pwd`"
@@ -14,12 +21,16 @@ then
   unset BUNDLE_IGNORE_CONFIG
 
   # Run the actual app using the bundled Ruby interpreter, with Bundler activated.
-  if $2; then
+  if $4; then
     export RAILS_ENV=production
-    exec "$SELFDIR/lib/ruby/bin/ruby" -rbundler/setup "bin/rails" server
+    $SELFDIR/lib/ruby/bin/ruby -rbundler/setup "bin/rails" server
   else
-    exec "$SELFDIR/lib/ruby/bin/ruby" -rbundler/setup "$1" $ARGV
+    $SELFDIR/lib/ruby/bin/ruby -rbundler/setup "$3" $ARGV
   fi
 else
-  exec "$SELFDIR/lib/ruby/bin/ruby" "$1"
+  $SELFDIR/lib/ruby/bin/ruby "$3"
 fi
+
+# Remove tmp directory
+cd $CDIR
+rm -rf $TMPDIR
