@@ -30,7 +30,7 @@ opt_parser = OptionParser.new do |opts|
   opts.on("-a", "--add=FOLDER", "Add an entire folder (eg. \".\")") { |v| options[:add] = v }
   opts.on("-o", "--output=OUTPUT", "Output executable filename") { |v| options[:output] = v }
   opts.on("-r", "--rails", "Rails support") { |v| options[:rails] = v }
-  opts.on("-d", "--daemon", "Runs app as a background task") { |v| options[:daemon] = v }
+  opts.on("-d", "--daemon", "Runs the app as a background task") { |v| options[:daemon] = v }
   opts.on("-t", "--target=[osx|l32|l64|win]", "Target platform (binary)") { |v| options[:target] = v }
   opts.on("-h","--help", "Help") { puts opt_parser }
 end

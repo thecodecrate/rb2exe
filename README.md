@@ -15,6 +15,7 @@ rb2exe RUBY_SCRIPT [options]
     -q, --quiet                      Do not run verbosely
     -a, --add=FOLDER                 Add an entire folder (eg. "--add=.")
     -o, --output=OUTPUT              Output executable filename
+    -d  --daemon                     Runs the app as a background task
     -r, --rails                      Rails support
     -t, --target=[osx|l32|l64|win]   Target platform (binary)
     -h, --help                       Help
