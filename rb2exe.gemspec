@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Rb2exe::VERSION
   spec.authors       = ["Daniel Loureiro"]
   spec.email         = ["loureirorg@gmail.com"]
+  spec.licenses      = ['CC0-1.0']
 
   spec.summary       = %q{Ruby to Executable}
   spec.description   = %q{Ruby to EXE - Turn ruby scripts into portable executable apps.}
