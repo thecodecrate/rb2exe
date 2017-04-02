@@ -1,5 +1,14 @@
 #!/bin/bash
 
+#####
+# $1: tmp_dir
+# $2: main_app_path
+# $3: exe_fn
+# $4: options[:quiet]
+# $5: options[:rails]
+# $6: options[:daemon]
+#####
+
 cd $1/payload
 
 if ! $4; then
@@ -17,6 +26,7 @@ if [ -e "payload.tar" ]; then
     if [ -e "payload.tar.gz" ]; then
         sed -i -e "s/__RUBY_COMMAND__/$2/g" decompress
         sed -i -e "s/__IS_RAILS__/$5/g" decompress
+        sed -i -e "s/__DAEMON__/$6/g" decompress
         cat decompress payload.tar.gz > output
     else
         echo "payload.tar.gz does not exist"

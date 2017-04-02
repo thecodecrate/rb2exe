@@ -98,8 +98,9 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/lourei
 
 
 # Changelog
-* 0.2.0: adding support to handle ARGV being passed to the ruby script (thanks @dabooze);
+* 0.2.2: add "--daemon" option;
 * 0.2.1: add missing "bundle" requirement;
+* 0.2.0: adding support to handle ARGV being passed to the ruby script (thanks @dabooze);
 
 ## TODO
 

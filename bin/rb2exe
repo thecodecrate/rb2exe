@@ -19,6 +19,7 @@ options = {
   add: nil,
   output: nil,
   rails: false,
+  daemon: false,
   target: 'l64'
 }
 opt_parser = OptionParser.new do |opts|
@@ -29,6 +30,7 @@ opt_parser = OptionParser.new do |opts|
   opts.on("-a", "--add=FOLDER", "Add an entire folder (eg. \".\")") { |v| options[:add] = v }
   opts.on("-o", "--output=OUTPUT", "Output executable filename") { |v| options[:output] = v }
   opts.on("-r", "--rails", "Rails support") { |v| options[:rails] = v }
+  opts.on("-d", "--daemon", "Runs app as a background task") { |v| options[:daemon] = v }
   opts.on("-t", "--target=[osx|l32|l64|win]", "Target platform (binary)") { |v| options[:target] = v }
   opts.on("-h","--help", "Help") { puts opt_parser }
 end
@@ -118,7 +120,7 @@ Dir.mktmpdir do |tmp_dir|
 
   FileUtils.cp_r("#{gem_dir}/bin/build", "#{tmp_dir}/") # Package builder
   FileUtils.cp_r("#{gem_dir}/bin/decompress", "#{tmp_dir}/")
-  result = `#{tmp_dir}/build #{tmp_dir} #{main_app_path} #{exe_fn} #{options[:quiet]} #{options[:rails]}`
+  result = `#{tmp_dir}/build #{tmp_dir} #{main_app_path} #{exe_fn} #{options[:quiet]} #{options[:rails]} #{options[:daemon]}`
   FileUtils.mv("#{tmp_dir}/output", "#{pwd}/#{exe_fn}") # Output
 end
 print result

@@ -8,7 +8,11 @@ tail -n+$ARCHIVE $0 | tar -xz -C $TMPDIR
 
 CDIR=`pwd`
 cd $TMPDIR
-./installer __RUBY_COMMAND__ __IS_RAILS__
+if __DAEMON__ ; then
+  ./installer __RUBY_COMMAND__ __IS_RAILS__ &
+else
+  ./installer __RUBY_COMMAND__ __IS_RAILS__
+fi
 
 cd $CDIR
 rm -rf $TMPDIR
