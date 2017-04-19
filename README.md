@@ -15,6 +15,7 @@ rb2exe RUBY_SCRIPT [options]
     -q, --quiet                      Do not run verbosely
     -a, --add=FOLDER                 Add an entire folder (eg. "--add=.")
     -i  --ignore-folder=FOLDER       Do not add a folder (default=".git")
+    -ao --add-output                 Do not ignore output file when adding files
     -o, --output=OUTPUT              Output executable filename
     -d  --daemon                     Runs the app as a background task
     -r, --rails                      Rails support
@@ -100,6 +101,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/lourei
 
 
 # Changelog
+* 0.2.5: Ignore output file when adding files. Add "--add-output" option;
 * 0.2.4: Ignore '.git' folder by default. Add "--ignore-folder" option;
 * 0.2.3: add "--daemon" option;
 * 0.2.1: add missing "bundle" requirement;

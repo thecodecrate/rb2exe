@@ -18,6 +18,7 @@ options = {
   quiet: false,
   add: nil,
   ignore_folder: '.git',
+  add_output: false,
   output: nil,
   rails: false,
   daemon: false,
@@ -30,6 +31,7 @@ opt_parser = OptionParser.new do |opts|
   opts.on("-q", "--quiet", "Do not run verbosely") { |v| options[:quiet] = v }
   opts.on("-a", "--add=FOLDER", "Add an entire folder (eg. \".\")") { |v| options[:add] = v }
   opts.on("-i", "--ignore-folder=FOLDER", "Do not add a folder") { |v| options[:ignore_folder] = v }
+  opts.on("-ao", "--add-output", "Do not ignore output file when adding files") { |v| options[:add_output] = v }
   opts.on("-o", "--output=OUTPUT", "Output executable filename") { |v| options[:output] = v }
   opts.on("-r", "--rails", "Rails support") { |v| options[:rails] = v }
   opts.on("-d", "--daemon", "Runs the app as a background task") { |v| options[:daemon] = v }
@@ -124,6 +126,12 @@ Dir.mktmpdir do |tmp_dir|
   if options[:ignore_folder]
     puts "Ignoring #{options[:ignore_folder]}" unless options[:quiet]
     FileUtils.rm_rf("#{tmp_dir}/payload/lib/app/#{options[:ignore_folder]}")
+  end
+
+  # ignore output file when adding files
+  if ! options[:add_output]
+    puts "Ignoring #{exe_fn}" unless options[:quiet]
+    FileUtils.rm_rf("#{tmp_dir}/payload/lib/app/#{exe_fn}")
   end
 
   FileUtils.cp_r("#{gem_dir}/bin/build", "#{tmp_dir}/") # Package builder
