@@ -3,15 +3,14 @@
 # Usage:
 #  rb2exe script.rb [OPTIONS]
 #
-require_relative "../lib/rb2exe/version.rb"
-require "tmpdir"
+require_relative '../lib/rb2exe/version.rb'
+require 'tmpdir'
 require 'optparse'
 require 'bundler'
 
 def blank?(arg)
-  "#{arg}".strip == ""
+  arg.to_s.strip == ''
 end
-
 
 # Arguments
 options = {
@@ -25,28 +24,31 @@ options = {
   target: 'l64'
 }
 opt_parser = OptionParser.new do |opts|
-  opts.banner = "Usage: rb2exe RUBY_SCRIPT [options]"
+  opts.banner = 'Usage: rb2exe RUBY_SCRIPT [options]'
   opts.version = Rb2exe::VERSION
 
-  opts.on("-q", "--quiet", "Do not run verbosely") { |v| options[:quiet] = v }
-  opts.on("-a", "--add=FOLDER", "Add an entire folder (eg. \".\")") { |v| options[:add] = v }
-  opts.on("-i", "--ignore-folder=FOLDER", "Do not add a folder") { |v| options[:ignore_folder] = v }
-  opts.on("-ao", "--add-output", "Do not ignore output file when adding files") { |v| options[:add_output] = v }
-  opts.on("-o", "--output=OUTPUT", "Output executable filename") { |v| options[:output] = v }
-  opts.on("-r", "--rails", "Rails support") { |v| options[:rails] = v }
-  opts.on("-d", "--daemon", "Runs the app as a background task") { |v| options[:daemon] = v }
-  opts.on("-t", "--target=[osx|l32|l64|win]", "Target platform (binary)") { |v| options[:target] = v }
-  opts.on("-h","--help", "Help") { puts opt_parser }
+  opts.on('-q', '--quiet', 'Do not run verbosely') { |v| options[:quiet] = v }
+  opts.on('-a', '--add=FOLDER', 'Add an entire folder (eg. ".")') { |v| options[:add] = v }
+  opts.on('-i', '--ignore-folder=FOLDER', 'Do not add a folder') { |v| options[:ignore_folder] = v }
+  opts.on('-ao', '--add-output', 'Do not ignore output file when adding files') { |v| options[:add_output] = v }
+  opts.on('-o', '--output=OUTPUT', 'Output executable filename') { |v| options[:output] = v }
+  opts.on('-r', '--rails', 'Rails support') { |v| options[:rails] = v }
+  opts.on('-d', '--daemon', 'Runs the app as a background task') { |v| options[:daemon] = v }
+  opts.on('-t', '--target=[osx|l32|l64|win]', 'Target platform (binary)') { |v| options[:target] = v }
+  opts.on('-h', '--help', 'Help') do
+    puts opt_parser
+    exit
+  end
 end
 opt_parser.parse!
 
 # Gem path
-gem_dir = File.expand_path(File.dirname(__FILE__) + "/..")
+gem_dir = File.expand_path(File.dirname(__FILE__) + '/..')
 
 # Main ruby app (filename)
 main_app_path = ARGV[0]
-abort("#{opt_parser}") if ! options[:rails] && blank?(main_app_path)
-abort("#{ARGV[0]} doesn't exist.") if ! options[:rails] && ! File.exists?(ARGV[0])
+abort(opt_parser.to_s) if !options[:rails] && blank?(main_app_path)
+abort("#{ARGV[0]} doesn't exist.") if !options[:rails] && !File.exist?(ARGV[0])
 
 # App directory
 pwd = Dir.pwd
@@ -57,7 +59,7 @@ else
     app_dir = nil
   else
     app_dir = File.expand_path(options[:add])
-    abort "Directory #{app_dir} doesn't exist." if ! Dir.exists?(app_dir)
+    abort "Directory #{app_dir} doesn't exist." unless Dir.exist?(app_dir)
   end
 end
 
@@ -65,30 +67,30 @@ end
 #   If not specified, uses the main app filename without its extension. Eg.:
 #     script.rb -> script
 if blank?(options[:output]) && options[:rails]
-  exe_fn = "output"
+  exe_fn = 'output'
 else
   exe_fn = blank?(options[:output]) ? File.basename(ARGV[0], File.extname(ARGV[0])) : options[:output]
-  abort("Can't use '#{exe_fn}' as a filename (there's a folder with this name).") if Dir.exists?("#{pwd}/#{exe_fn}")
+  abort("Can't use '#{exe_fn}' as a filename (there's a folder with this name).") if Dir.exist?("#{pwd}/#{exe_fn}")
 end
 
 # Ruby version should be 2.2.2, 64 bits:
 version = `echo $RUBY_VERSION`.strip
-if version != "ruby-2.2.2"
+if version != 'ruby-2.2.2'
   abort "Your ruby version should be EXACTLY 2.2.2, not higher, not lower (your is #{version})."
 end
 
 # Temporary directory
-result = "Error"
+result = 'Error'
 Dir.mktmpdir do |tmp_dir|
   FileUtils.mkdir_p("#{tmp_dir}/payload/lib")
 
   # Copy ruby traveler 2.2.2 to "payload/lib/ruby"
   ruby_src = case options[:target]
-  when "l64" then "#{gem_dir}/bin/traveling-ruby-2.2.2/l64"
-  when "l32" then "#{gem_dir}/bin/traveling-ruby-2.2.2/l32"
-  when "osx" then "#{gem_dir}/bin/traveling-ruby-2.2.2/osx"
-  when "win" then "#{gem_dir}/bin/traveling-ruby-2.2.2/win"
-  else abort("Unknow platform (#{options[:target]})")
+             when 'l64' then "#{gem_dir}/bin/traveling-ruby-2.2.2/l64"
+             when 'l32' then "#{gem_dir}/bin/traveling-ruby-2.2.2/l32"
+             when 'osx' then "#{gem_dir}/bin/traveling-ruby-2.2.2/osx"
+             when 'win' then "#{gem_dir}/bin/traveling-ruby-2.2.2/win"
+             else abort("Unknow platform (#{options[:target]})")
   end
   FileUtils.cp_r(ruby_src, "#{tmp_dir}/payload/lib/ruby")
 
@@ -102,11 +104,11 @@ Dir.mktmpdir do |tmp_dir|
   FileUtils.cp_r("#{gem_dir}/bin/installer", "#{tmp_dir}/payload/") # Create a wrapper script (name is "installer")
 
   # Gemfile support
-  if File.exists?("#{tmp_dir}/payload/lib/app/Gemfile")
-    puts "Gemfile detected. Loading gems." unless options[:quiet]
+  if File.exist?("#{tmp_dir}/payload/lib/app/Gemfile")
+    puts 'Gemfile detected. Loading gems.' unless options[:quiet]
     FileUtils.mkdir_p("#{tmp_dir}/payload/lib/tmp") # Create a "tmp" folder on ".package/payload/lib"
     FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile", "#{tmp_dir}/payload/lib/tmp/") # Copy the project Gemfile to tmp
-    FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile.lock", "#{tmp_dir}/payload/lib/tmp/") if File.exists?("#{tmp_dir}/payload/lib/app/Gemfile.lock")
+    FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile.lock", "#{tmp_dir}/payload/lib/tmp/") if File.exist?("#{tmp_dir}/payload/lib/app/Gemfile.lock")
     # Download gems into the "lib/vendor" folder
     Bundler.with_clean_env do
       Dir.chdir("#{tmp_dir}/payload/lib/app") do
@@ -114,9 +116,9 @@ Dir.mktmpdir do |tmp_dir|
       end
     end
     FileUtils.rm_rf("#{tmp_dir}/payload/lib/tmp/") # Delete tmp folder
-    %x[cd #{tmp_dir}/payload/lib/ && rm -f vendor/*/*/cache/*] # Delete gem's cache in the vendor folder
+    `cd #{tmp_dir}/payload/lib/ && rm -f vendor/*/*/cache/*` # Delete gem's cache in the vendor folder
     FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile", "#{tmp_dir}/payload/lib/vendor/") # Copy the Gemfile to the vendor folder
-    FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile.lock", "#{tmp_dir}/payload/lib/vendor/") if File.exists?("#{tmp_dir}/payload/lib/app/Gemfile.lock")
+    FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile.lock", "#{tmp_dir}/payload/lib/vendor/") if File.exist?("#{tmp_dir}/payload/lib/app/Gemfile.lock")
     # Create a bundler config
     FileUtils.mkdir_p("#{tmp_dir}/payload/lib/vendor/.bundle")
     FileUtils.cp("#{gem_dir}/lib/bundler-config", "#{tmp_dir}/payload/lib/vendor/.bundle/config")
@@ -129,7 +131,7 @@ Dir.mktmpdir do |tmp_dir|
   end
 
   # ignore output file when adding files
-  if ! options[:add_output]
+  unless options[:add_output]
     puts "Ignoring #{exe_fn}" unless options[:quiet]
     FileUtils.rm_rf("#{tmp_dir}/payload/lib/app/#{exe_fn}")
   end

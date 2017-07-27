@@ -1,5 +1,4 @@
-require "rb2exe/version"
+require 'rb2exe/version'
 
 module Rb2exe
-  
 end

@@ -1,3 +1,3 @@
-require "bundler/gem_tasks"
+require 'bundler/gem_tasks'
 
-task :default => :spec
+task default: :spec
