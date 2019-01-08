@@ -101,7 +101,8 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/lourei
 
 
 # Changelog
-* 0.3.0: Includes a libruby.so.2.2 file copy;
+* 0.3.1: Fixes an "incorrect version" bug
+* 0.3.0: Includes a copy of the libruby.so.2.2 file;
 * 0.2.5: Ignore output file when adding files. Add "--add-output" option;
 * 0.2.4: Ignore '.git' folder by default. Add "--ignore-folder" option;
 * 0.2.3: add "--daemon" option;
