@@ -74,8 +74,8 @@ else
 end
 
 # Ruby version should be 2.2.2, 64 bits:
-version = `echo $RUBY_VERSION`.strip
-if version != 'ruby-2.2.2'
+version = RUBY_VERSION.strip
+if version != '2.2.2'
   abort "Your ruby version should be EXACTLY 2.2.2, not higher, not lower (your is #{version})."
 end
 
