@@ -73,10 +73,11 @@ else
   abort("Can't use '#{exe_fn}' as a filename (there's a folder with this name).") if Dir.exist?("#{pwd}/#{exe_fn}")
 end
 
-# Ruby version should be 2.2.2, 64 bits:
+# Ruby version should be 2.5.1, 64 bits:
 version = RUBY_VERSION.strip
-if version != '2.2.2'
-  abort "Your ruby version should be EXACTLY 2.2.2, not higher, not lower (your is #{version})."
+if version != '2.5.1'
+  # \/ changed to latest apt version: 2.5.1
+  abort "Your ruby version should be EXACTLY 2.5.1, not higher, not lower (your is #{version})."
 end
 
 # Temporary directory
