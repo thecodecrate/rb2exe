@@ -4,7 +4,14 @@ export ARGV=$@
 
 ARCHIVE=`awk '/^__ARCHIVE_BELOW__/ {print NR + 1; exit 0; }' $0`
 
-tail -n+$ARCHIVE $0 | tar -xz -C $TMPDIR
+isGnuTar=$(tar --version | grep -q 'gnu')
+if [ $? -eq 0 ]
+then
+    # "Detected GNU tar" https://superuser.com/a/923322
+    tail -n+$ARCHIVE $0 | tar --warning=no-unknown-keyword -xz -C $TMPDIR
+else
+    tail -n+$ARCHIVE $0 | tar -xz -C $TMPDIR
+fi
 
 CDIR=`pwd`
 cd $TMPDIR

@@ -21,7 +21,7 @@ options = {
   output: nil,
   rails: false,
   daemon: false,
-  target: 'l64'
+  target: 'lx64'
 }
 opt_parser = OptionParser.new do |opts|
   opts.banner = 'Usage: rb2exe RUBY_SCRIPT [options]'
@@ -34,7 +34,7 @@ opt_parser = OptionParser.new do |opts|
   opts.on('-o', '--output=OUTPUT', 'Output executable filename') { |v| options[:output] = v }
   opts.on('-r', '--rails', 'Rails support') { |v| options[:rails] = v }
   opts.on('-d', '--daemon', 'Runs the app as a background task') { |v| options[:daemon] = v }
-  opts.on('-t', '--target=[osx|l32|l64|win]', 'Target platform (binary)') { |v| options[:target] = v }
+  opts.on('-t', '--target=[oa64|ox64|la64|lx64|win64|win32]', 'Target platform (binary)') { |v| options[:target] = v }
   opts.on('-h', '--help', 'Help') do
     puts opt_parser
     exit
@@ -73,10 +73,10 @@ else
   abort("Can't use '#{exe_fn}' as a filename (there's a folder with this name).") if Dir.exist?("#{pwd}/#{exe_fn}")
 end
 
-# Ruby version should be 2.2.2, 64 bits:
+# Ruby version should be 3.2.2, 64 bits:
 version = RUBY_VERSION.strip
-if version != '2.2.2'
-  abort "Your ruby version should be EXACTLY 2.2.2, not higher, not lower (your is #{version})."
+if version != '3.2.2'
+  abort "Your ruby version should be EXACTLY 3.2.2, not higher, not lower (your is #{version})."
 end
 
 # Temporary directory
@@ -84,12 +84,14 @@ result = 'Error'
 Dir.mktmpdir do |tmp_dir|
   FileUtils.mkdir_p("#{tmp_dir}/payload/lib")
 
-  # Copy ruby traveler 2.2.2 to "payload/lib/ruby"
+  # Copy ruby traveler 3.2.2 to "payload/lib/ruby"
   ruby_src = case options[:target]
-             when 'l64' then "#{gem_dir}/bin/traveling-ruby-2.2.2/l64"
-             when 'l32' then "#{gem_dir}/bin/traveling-ruby-2.2.2/l32"
-             when 'osx' then "#{gem_dir}/bin/traveling-ruby-2.2.2/osx"
-             when 'win' then "#{gem_dir}/bin/traveling-ruby-2.2.2/win"
+             when 'lx64' then "#{gem_dir}/bin/traveling-ruby-3.2.2/lx64"
+             when 'la64' then "#{gem_dir}/bin/traveling-ruby-3.2.2/la64"
+             when 'ox64' then "#{gem_dir}/bin/traveling-ruby-3.2.2/ox64"
+             when 'oa64' then "#{gem_dir}/bin/traveling-ruby-3.2.2/oa64"
+             when 'win64' then "#{gem_dir}/bin/traveling-ruby-3.2.2/win64"
+             when 'win86' then "#{gem_dir}/bin/traveling-ruby-3.2.2/win86"
              else abort("Unknow platform (#{options[:target]})")
   end
   FileUtils.cp_r(ruby_src, "#{tmp_dir}/payload/lib/ruby")
@@ -110,8 +112,12 @@ Dir.mktmpdir do |tmp_dir|
     FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile", "#{tmp_dir}/payload/lib/tmp/") # Copy the project Gemfile to tmp
     FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile.lock", "#{tmp_dir}/payload/lib/tmp/") if File.exist?("#{tmp_dir}/payload/lib/app/Gemfile.lock")
     # Download gems into the "lib/vendor" folder
-    Bundler.with_clean_env do
+    Bundler.with_original_env do
       Dir.chdir("#{tmp_dir}/payload/lib/app") do
+        # `bundle config set --local path #{tmp_dir}/payload/lib/vendor`
+        # `bundle config set --local without 'development'`
+        # `bundle install`
+        # Below options return deprecated bundler warnings:
         `bundle install --path #{tmp_dir}/payload/lib/vendor --without development`
       end
     end

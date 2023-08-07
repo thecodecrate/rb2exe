@@ -1,0 +1,60 @@
+name: Build
+
+on: 
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest","macos-latest"]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.2.2
+    - name: Set up bundler
+      run: gem install bundler -v 2.4.18
+    - name: Set up environment
+      run: bundle install
+    - name: download runtime
+      run: bundle exec rake package
+    - name: setup data for test
+      run: echo "puts 'Hello world'" > test.rb
+    - name: Bundle app for ${{ matrix.os }}
+      run: bundle exec rb2exe test.rb --target=lx64
+      if: runner.os == 'Linux'
+    - name: Bundle app for ${{ matrix.os }}
+      run: bundle exec rb2exe test.rb --target=ox64
+      if: runner.os == 'MacOS'
+    - name: Test app
+      run: ./test
+    - name: Upload app
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-${{ matrix.os }}
+        path: test
+  test:
+    defaults:
+      run:
+        shell: sh
+    needs: [build]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest","macos-latest"]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Download all workflow run artifacts
+      uses: actions/download-artifact@v3
+    - name: test ${{ matrix.os }} package
+      run: |
+        ls test-${{ matrix.os }}
+        chmod +x test-${{ matrix.os }}/test
+        ./test-${{ matrix.os }}/test
