@@ -87,16 +87,13 @@ def create_package(version, source_target, package_target, _os_type)
 
   sh "rm -rf bin/traveling-ruby-#{TRAVELING_RB_VERSION}/#{package_target}"
   sh "mkdir -p bin/traveling-ruby-#{TRAVELING_RB_VERSION}/#{package_target}"
-  if Gem::Platform.local.os.eql?('darwin').nil?
-    # no gnu tar on macos
+  tar_command = `tar --version`
+  if tar_command.include?("GNU tar")
     sh "tar --warning=no-unknown-keyword -xzf build/traveling-ruby-#{version}-#{source_target}.tar.gz -C bin/traveling-ruby-#{TRAVELING_RB_VERSION}/#{package_target}"
-    # sh "tar --warning=no-unknown-keyword -xzf build/traveling-ruby-#{version}-#{source_target}-full.tar.gz -C bin/traveling-ruby-#{TRAVELING_RB_VERSION}/#{package_target}"
   else
     sh "tar -xzf build/traveling-ruby-#{version}-#{source_target}.tar.gz -C bin/traveling-ruby-#{TRAVELING_RB_VERSION}/#{package_target}"
-    # sh "tar -xzf build/traveling-ruby-#{version}-#{source_target}-full.tar.gz -C bin/traveling-ruby-#{TRAVELING_RB_VERSION}/#{package_target}"
   end
   sh "rm build/traveling-ruby-#{version}-#{source_target}.tar.gz"
-  # sh "rm build/traveling-ruby-#{version}-#{source_target}-full.tar.gz"
 end
 
 def download_runtime(version, target)
