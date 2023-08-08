@@ -112,7 +112,7 @@ Dir.mktmpdir do |tmp_dir|
     FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile", "#{tmp_dir}/payload/lib/tmp/") # Copy the project Gemfile to tmp
     FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile.lock", "#{tmp_dir}/payload/lib/tmp/") if File.exist?("#{tmp_dir}/payload/lib/app/Gemfile.lock")
     # Download gems into the "lib/vendor" folder
-    Bundler.with_unbundled_env do
+    Bundler.with_original_env do
       Dir.chdir("#{tmp_dir}/payload/lib/app") do
         `bundle config set --local path #{tmp_dir}/payload/lib/vendor`
         `bundle config set --local without 'development'`

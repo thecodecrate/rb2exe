@@ -42,15 +42,20 @@ jobs:
         echo "gem 'faker'" >> Gemfile
         echo "require 'faker'" > a.rb
         echo 'puts "Hello #{Faker::Name.name}"' >> a.rb
-        cd ..
-        bundle exec rb2exe test2/a.rb --add=test2 --target=$TARGET
-        ./a
+    - run: bundle exec rb2exe test2/a.rb --add=test2 --target=lx64
+      if: runner.os == 'Linux'
+    - run: bundle exec rb2exe test2/a.rb --add=test2 --target=ox64
+      if: runner.os == 'MacOS'
+    - run: ./a
     - name: Test 3
       run: |
         gem install rails
         rails new myproject
-        bundle exec rb2exe --rails --add=myproject --target=$TARGET
-        ./output || echo "expected failure due to missing native gems"
+    - run: bundle exec rb2exe --rails --add=myproject --target=lx64
+      if: runner.os == 'Linux'
+    - run: bundle exec rb2exe --rails --add=myproject --target=ox64
+      if: runner.os == 'MacOS'
+    - run: ./output || echo "expected failure due to missing native gems"
     - name: Upload app
       uses: actions/upload-artifact@v3
       with:
