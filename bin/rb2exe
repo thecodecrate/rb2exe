@@ -112,13 +112,13 @@ Dir.mktmpdir do |tmp_dir|
     FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile", "#{tmp_dir}/payload/lib/tmp/") # Copy the project Gemfile to tmp
     FileUtils.cp("#{tmp_dir}/payload/lib/app/Gemfile.lock", "#{tmp_dir}/payload/lib/tmp/") if File.exist?("#{tmp_dir}/payload/lib/app/Gemfile.lock")
     # Download gems into the "lib/vendor" folder
-    Bundler.with_original_env do
+    Bundler.with_unbundled_env do
       Dir.chdir("#{tmp_dir}/payload/lib/app") do
-        # `bundle config set --local path #{tmp_dir}/payload/lib/vendor`
-        # `bundle config set --local without 'development'`
-        # `bundle install`
+        `bundle config set --local path #{tmp_dir}/payload/lib/vendor`
+        `bundle config set --local without 'development'`
+        `bundle install`
         # Below options return deprecated bundler warnings:
-        `bundle install --path #{tmp_dir}/payload/lib/vendor --without development`
+        # `bundle install --path #{tmp_dir}/payload/lib/vendor --without development`
       end
     end
     FileUtils.rm_rf("#{tmp_dir}/payload/lib/tmp/") # Delete tmp folder

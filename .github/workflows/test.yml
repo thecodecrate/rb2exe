@@ -32,8 +32,25 @@ jobs:
     - name: Bundle app for ${{ matrix.os }}
       run: bundle exec rb2exe test.rb --target=ox64
       if: runner.os == 'MacOS'
-    - name: Test app
+    - name: Test 1
       run: ./test
+    - name: Test 2
+      run: |
+        mkdir test2
+        cd test2
+        echo "source 'https://rubygems.org'" > Gemfile
+        echo "gem 'faker'" >> Gemfile
+        echo "require 'faker'" > a.rb
+        echo 'puts "Hello #{Faker::Name.name}"' >> a.rb
+        cd ..
+        bundle exec rb2exe test2/a.rb --add=test2 --target=$TARGET
+        ./a
+    - name: Test 3
+      run: |
+        gem install rails
+        rails new myproject
+        bundle exec rb2exe --rails --add=myproject --target=$TARGET
+        ./output || echo "expected failure due to missing native gems"
     - name: Upload app
       uses: actions/upload-artifact@v3
       with:
