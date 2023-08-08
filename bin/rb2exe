@@ -52,15 +52,15 @@ abort("#{ARGV[0]} doesn't exist.") if !options[:rails] && !File.exist?(ARGV[0])
 
 # App directory
 pwd = Dir.pwd
-if options[:rails]
+if options[:rails] and options[:add].nil?
   app_dir = File.expand_path('.')
+elsif options[:rails]
+  app_dir = File.expand_path(options[:add])
+elsif blank?(options[:add])
+  app_dir = nil
 else
-  if blank?(options[:add])
-    app_dir = nil
-  else
-    app_dir = File.expand_path(options[:add])
-    abort "Directory #{app_dir} doesn't exist." unless Dir.exist?(app_dir)
-  end
+  app_dir = File.expand_path(options[:add])
+  abort "Directory #{app_dir} doesn't exist." unless Dir.exist?(app_dir)
 end
 
 # Executable filename
@@ -144,7 +144,7 @@ Dir.mktmpdir do |tmp_dir|
 
   FileUtils.cp_r("#{gem_dir}/bin/build", "#{tmp_dir}/") # Package builder
   FileUtils.cp_r("#{gem_dir}/bin/decompress", "#{tmp_dir}/")
-  result = `#{tmp_dir}/build #{tmp_dir} #{main_app_path} #{exe_fn} #{options[:quiet]} #{options[:rails]} #{options[:daemon]}`
+  result = `#{tmp_dir}/build #{tmp_dir} #{main_app_path.nil? ? false : File.basename(main_app_path) } #{exe_fn} #{options[:quiet]} #{options[:rails]} #{options[:daemon]}`
   FileUtils.mv("#{tmp_dir}/output", "#{pwd}/#{exe_fn}") # Output
 end
 print result

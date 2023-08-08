@@ -1,11 +1,27 @@
 BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
   arch_check_script:
     - uname -am
+  bundle_version_script: gem install bundler -v 2.4.18
   install_script: bundle install
   runtime_script: bundle exec rake package
   hello_world_script: echo "puts 'Hello world'" > test.rb
   package_script: bundle exec rb2exe test.rb --target=$TARGET
   test_script: ./test
+  test_two_script: |
+    mkdir test2
+    cd test2
+    echo "source 'https://rubygems.org'" > Gemfile
+    echo "gem 'faker'" >> Gemfile
+    echo "require 'faker'" > a.rb
+    echo 'puts "Hello #{Faker::Name.name}"' >> a.rb
+    cd ..
+    bundle exec rb2exe test2/a.rb --add=test2 --target=$TARGET
+    ./a
+  test_three_script: |
+    gem install rails
+    rails new myproject
+    bundle exec rb2exe --rails --add=myproject --target=$TARGET
+    ./output
 
 macos_arm_task: 
   macos_instance:
@@ -52,7 +68,7 @@ linux_arm_task:
 linux_amd_task: 
   env:
     TARGET: lx64
-  arm_container:
+  container:
     image: ruby:3.2.2-slim
     cpu: 1
     memory: 1G

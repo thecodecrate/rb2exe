@@ -14,8 +14,7 @@ SELFDIR="`cd \"$SELFDIR\" && pwd`"
 cd $SELFDIR/lib/app/
 
 ## GEMFILE
-if [ -f "$SELFDIR/lib/vendor/Gemfile" ]
-then
+if [ -f "$SELFDIR/lib/vendor/Gemfile" ]; then
   # Tell Bundler where the Gemfile and gems are.
   export BUNDLE_GEMFILE="$SELFDIR/lib/vendor/Gemfile"
   unset BUNDLE_IGNORE_CONFIG
@@ -28,7 +27,7 @@ then
     $SELFDIR/lib/ruby/bin/ruby -rbundler/setup "$3" $ARGV
   fi
 else
-  $SELFDIR/lib/ruby/bin/ruby "$3"
+  $SELFDIR/lib/ruby/bin/ruby "$3" $ARGV
 fi
 
 # Remove tmp directory
